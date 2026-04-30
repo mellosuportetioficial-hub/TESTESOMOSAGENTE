@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A Gente — Conecta Talentos</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,700;0,900;1,700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:      #1a2d5a;
+  --navy-deep: #0f1d3d;
+  --navy-mid:  #243570;
+  --green:     #4caf3f;
+  --green-dark:#369929;
+  --green-light:#7ed471;
+  --gold:      #f5c842;
+  --coral:     #ff6b4a;
+  --sky:       #5b9af5;
+  --white:     #ffffff;
+  --muted:     rgba(255,255,255,0.5);
+  --card:      rgba(255,255,255,0.055);
+  --border:    rgba(255,255,255,0.1);
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+body { font-family: 'Plus Jakarta Sans', sans-serif; background: var(--navy-deep); color: var(--white); overflow-x: hidden; }
+
+/* BG */
+.bg-canvas { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.bg-canvas::before {
+  content: '';
+  position: absolute; width: 900px; height: 900px;
+  background: radial-gradient(circle, rgba(76,175,63,0.2) 0%, transparent 65%);
+  top: -250px; right: -200px; border-radius: 50%;
+  animation: breathe 9s ease-in-out infinite alternate;
+}
+.bg-canvas::after {
+  content: '';
+  position: absolute; width: 650px; height: 650px;
+  background: radial-gradient(circle, rgba(91,154,245,0.15) 0%, transparent 65%);
+  bottom: -100px; left: -100px; border-radius: 50%;
+  animation: breathe 12s ease-in-out infinite alternate-reverse;
+}
+@keyframes breathe { from { transform: scale(1); } to { transform: scale(1.18); } }
+.grid-lines {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-size: 64px 64px;
+}
+
+/* NAV */
+nav {
+  position: fixed; top: 0; left: 0; right: 0; z-index: 100; height: 72px;
+  display: flex; align-items: center; justify-content: space-between; padding: 0 5vw;
+  background: rgba(15,29,61,0.75); backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border); transition: background 0.4s;
+}
+nav.scrolled { background: rgba(10,18,42,0.97); }
+.nav-logo { display: flex; align-items: center; gap: 12px; }
+.nav-logo svg { height: 40px; width: auto; }
+.nav-brand { font-family: 'Fraunces', serif; font-weight: 700; font-size: 1.1rem; letter-spacing: -0.01em; }
+.nav-brand em { font-style: normal; color: var(--green); }
+.nav-links { display: flex; gap: 2rem; list-style: none; }
+.nav-links a { color: var(--muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: color 0.2s; position: relative; }
+.nav-links a::after { content: ''; position: absolute; bottom: -3px; left: 0; width: 0; height: 2px; background: linear-gradient(90deg, var(--green), var(--sky)); transition: width 0.3s; border-radius: 2px; }
+.nav-links a:hover { color: var(--white); }
+.nav-links a:hover::after { width: 100%; }
+.nav-cta { background: linear-gradient(135deg, var(--green), #2e9e22) !important; color: var(--white) !important; padding: 0.48rem 1.3rem; border-radius: 50px; font-weight: 600 !important; transition: transform 0.2s, box-shadow 0.2s !important; box-shadow: 0 4px 18px rgba(76,175,63,0.38); }
+.nav-cta:hover { transform: translateY(-2px) !important; box-shadow: 0 8px 28px rgba(76,175,63,0.55) !important; }
+.nav-cta::after { display: none !important; }
+
+/* HERO */
+#inicio {
+  min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; padding: 110px 5vw 80px; position: relative; z-index: 1;
+}
+.hero-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: rgba(76,175,63,0.12); border: 1px solid rgba(76,175,63,0.32);
+  color: var(--green-light); font-size: 0.77rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  padding: 7px 18px; border-radius: 50px; margin-bottom: 2rem;
+  opacity: 0; transform: translateY(16px); animation: up 0.6s 0.2s forwards;
+}
+.pdot { width: 7px; height: 7px; border-radius: 50%; background: var(--green); animation: ring 2s ease-in-out infinite; }
+@keyframes ring { 0%{box-shadow:0 0 0 0 rgba(76,175,63,0.6)} 70%{box-shadow:0 0 0 9px rgba(76,175,63,0)} 100%{box-shadow:0 0 0 0 rgba(76,175,63,0)} }
+
+h1 {
+  font-family: 'Fraunces', serif; font-size: clamp(2.6rem, 6.5vw, 5.2rem);
+  font-weight: 900; line-height: 1.05; letter-spacing: -0.03em; max-width: 880px; margin-bottom: 1.5rem;
+  opacity: 0; transform: translateY(28px); animation: up 0.7s 0.4s forwards;
+}
+h1 em {
+  font-style: italic;
+  background: linear-gradient(120deg, var(--green-light) 0%, var(--gold) 45%, var(--green) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  background-size: 200% 100%; animation: shimmer 4s linear 1.2s infinite;
+}
+@keyframes shimmer { 0%{background-position:200% 0} 100%{background-position:-200% 0} }
+.hero-sub {
+  max-width: 540px; color: var(--muted); font-size: 1.08rem; font-weight: 300; line-height: 1.8; margin-bottom: 3rem;
+  opacity: 0; transform: translateY(28px); animation: up 0.7s 0.6s forwards;
+}
+.hero-btns {
+  display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+  opacity: 0; transform: translateY(28px); animation: up 0.7s 0.8s forwards;
+}
+.btn {
+  display: inline-flex; align-items: center; gap: 12px; padding: 1rem 2.2rem; border-radius: 14px;
+  font-family: 'Plus Jakarta Sans', sans-serif; font-size: 0.97rem; font-weight: 600;
+  text-decoration: none; border: none; cursor: pointer; transition: transform 0.25s, box-shadow 0.25s;
+  position: relative; overflow: hidden;
+}
+.btn::after { content: ''; position: absolute; inset: 0; background: rgba(255,255,255,0.12); opacity: 0; transition: opacity 0.2s; }
+.btn:hover::after { opacity: 1; }
+.btn:hover { transform: translateY(-4px); }
+.btn-candidate { background: linear-gradient(135deg, var(--green) 0%, #2e9e22 100%); color: var(--white); box-shadow: 0 8px 32px rgba(76,175,63,0.4); }
+.btn-candidate:hover { box-shadow: 0 18px 48px rgba(76,175,63,0.58); }
+.btn-company { background: linear-gradient(135deg, #1e3580, #2a4a9e); color: var(--white); border: 1px solid rgba(91,154,245,0.3); box-shadow: 0 8px 32px rgba(26,45,90,0.5); }
+.btn-company:hover { box-shadow: 0 18px 48px rgba(58,123,213,0.4); border-color: rgba(91,154,245,0.55); }
+.hero-stats {
+  display: flex; gap: 4rem; flex-wrap: wrap; justify-content: center;
+  margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--border);
+  opacity: 0; transform: translateY(20px); animation: up 0.7s 1.1s forwards;
+}
+.stat { text-align: center; }
+.stat-n {
+  font-family: 'Fraunces', serif; font-size: 2.4rem; font-weight: 900; display: block; line-height: 1;
+  background: linear-gradient(135deg, var(--white), rgba(255,255,255,0.55));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.stat-l { font-size: 0.74rem; color: var(--muted); letter-spacing: 0.08em; text-transform: uppercase; margin-top: 4px; }
+
+@keyframes up { to { opacity: 1; transform: translateY(0); } }
+
+/* DIVIDER */
+.divider { height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent); margin: 0 5vw; position: relative; z-index: 1; }
+
+/* SECTIONS */
+section { padding: 100px 5vw; position: relative; z-index: 1; }
+.stag {
+  font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: var(--green-light);
+  display: inline-flex; align-items: center; gap: 8px; margin-bottom: 1rem;
+}
+.stag::before { content: ''; width: 20px; height: 2px; background: var(--green); border-radius: 2px; }
+.stitle { font-family: 'Fraunces', serif; font-size: clamp(1.9rem, 4vw, 3.2rem); font-weight: 700; letter-spacing: -0.025em; line-height: 1.1; margin-bottom: 1.2rem; }
+.sbody { color: var(--muted); font-size: 1.05rem; font-weight: 300; line-height: 1.85; max-width: 480px; }
+
+/* SOBRE */
+#sobre { display: grid; grid-template-columns: 1fr 1fr; gap: 6rem; align-items: center; }
+.cards-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.fcard {
+  background: linear-gradient(145deg, rgba(255,255,255,0.07), rgba(255,255,255,0.02));
+  border: 1px solid var(--border); border-radius: 20px; padding: 1.8rem;
+  backdrop-filter: blur(12px); transition: transform 0.35s, border-color 0.35s, box-shadow 0.35s; position: relative; overflow: hidden;
+}
+.fcard::before { content: ''; position: absolute; inset: 0; background: linear-gradient(135deg, rgba(76,175,63,0.09), transparent 60%); opacity: 0; transition: opacity 0.35s; }
+.fcard:hover { transform: translateY(-6px); border-color: rgba(76,175,63,0.4); box-shadow: 0 24px 60px rgba(0,0,0,0.35); }
+.fcard:hover::before { opacity: 1; }
+.fcard.wide { grid-column: span 2; }
+.fcard.blue::before { background: linear-gradient(135deg, rgba(91,154,245,0.1), transparent 60%); }
+.fcard.blue:hover { border-color: rgba(91,154,245,0.4); }
+.fcard.gold::before { background: linear-gradient(135deg, rgba(245,200,66,0.1), transparent 60%); }
+.fcard.gold:hover { border-color: rgba(245,200,66,0.35); }
+.fcard-ico { margin-bottom: 1rem; display: block; }
+.fcard-title { font-weight: 700; font-size: 1rem; margin-bottom: 0.5rem; }
+.fcard-desc { font-size: 0.86rem; color: var(--muted); line-height: 1.65; }
+.pill {
+  display: inline-block; margin-top: 0.8rem; font-size: 0.72rem; font-weight: 600;
+  padding: 3px 12px; border-radius: 50px; letter-spacing: 0.05em;
+  background: rgba(76,175,63,0.15); color: var(--green-light); border: 1px solid rgba(76,175,63,0.25);
+}
+.blue .pill { background: rgba(91,154,245,0.12); color: #9ec4ff; border-color: rgba(91,154,245,0.25); }
+.gold .pill { background: rgba(245,200,66,0.12); color: var(--gold); border-color: rgba(245,200,66,0.25); }
+
+/* COMO FUNCIONA */
+#como-funciona { text-align: center; }
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-top: 3.5rem; }
+.step {
+  background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.015));
+  border: 1px solid var(--border); border-radius: 22px; padding: 2.8rem 2rem;
+  position: relative; overflow: hidden; transition: transform 0.35s, box-shadow 0.35s;
+}
+.step:hover { transform: translateY(-8px); box-shadow: 0 36px 70px rgba(0,0,0,0.35); }
+.step-bar { position: absolute; bottom: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, var(--green), var(--sky)); transform: scaleX(0); transform-origin: left; transition: transform 0.5s cubic-bezier(0.23,1,0.32,1); }
+.step:hover .step-bar { transform: scaleX(1); }
+.step-num { font-family: 'Fraunces', serif; font-size: 4rem; font-weight: 900; color: rgba(255,255,255,0.04); position: absolute; top: 1rem; right: 1.5rem; line-height: 1; }
+.step-ico { margin-bottom: 1.2rem; display: block; }
+.step-title { font-weight: 700; font-size: 1.08rem; margin-bottom: 0.6rem; }
+.step-desc { color: var(--muted); font-size: 0.9rem; line-height: 1.7; }
+
+/* CONTATO */
+#contato { background: linear-gradient(135deg, rgba(76,175,63,0.06) 0%, rgba(26,45,90,0.12) 50%, rgba(91,154,245,0.06) 100%); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); text-align: center; }
+.contato-wrap { max-width: 640px; margin: 0 auto; }
+.contato-btns { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; margin-top: 2.8rem; }
+.btn-wa { background: linear-gradient(135deg, #25d366, #128c7e); color: var(--white); box-shadow: 0 8px 28px rgba(37,211,102,0.32); }
+.btn-wa:hover { box-shadow: 0 18px 44px rgba(37,211,102,0.48); }
+.btn-mail { background: rgba(255,255,255,0.06); color: var(--white); border: 1px solid var(--border); }
+.btn-mail:hover { background: rgba(255,255,255,0.1); }
+
+/* FOOTER */
+footer {
+  padding: 2.5rem 5vw; border-top: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  position: relative; z-index: 1;
+}
+.footer-brand { display: flex; align-items: center; gap: 10px; }
+.footer-brand svg { height: 32px; }
+.footer-name { font-family: 'Fraunces', serif; font-size: 0.95rem; color: rgba(255,255,255,0.45); }
+.footer-name em { font-style: normal; color: var(--green); }
+.footer-links { display: flex; gap: 1.5rem; list-style: none; }
+.footer-links a { color: rgba(255,255,255,0.4); text-decoration: none; font-size: 0.82rem; transition: color 0.2s; }
+.footer-links a:hover { color: var(--green-light); }
+.footer-copy { font-size: 0.78rem; color: rgba(255,255,255,0.28); }
+
+/* REVEAL */
+.reveal { opacity: 0; transform: translateY(36px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.reveal.in { opacity: 1; transform: none; }
+.d1{transition-delay:0.1s} .d2{transition-delay:0.2s} .d3{transition-delay:0.3s} .d4{transition-delay:0.4s}
+
+/* CURSOR */
+.cglow { width: 340px; height: 340px; background: radial-gradient(circle, rgba(76,175,63,0.1) 0%, transparent 70%); position: fixed; pointer-events: none; z-index: 9999; transform: translate(-50%,-50%); border-radius: 50%; transition: left 0.06s, top 0.06s; }
+
+/* HAMBURGER */
+.hbg { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; padding: 4px; }
+.hbg span { width: 22px; height: 2px; background: var(--white); border-radius: 2px; display: block; }
+
+@media (max-width: 880px) {
+  .nav-links { display: none; }
+  .hbg { display: flex; }
+  #sobre { grid-template-columns: 1fr; gap: 3rem; }
+  .steps { grid-template-columns: 1fr; }
+  .hero-stats { gap: 2.5rem; }
+}
+@media (max-width: 480px) {
+  .hero-btns { flex-direction: column; align-items: center; }
+  .cards-grid { grid-template-columns: 1fr; }
+  .fcard.wide { grid-column: span 1; }
+  footer { flex-direction: column; text-align: center; }
+}
+</style>
+</head>
+<body>
+
+<div class="cglow" id="cglow"></div>
+<div class="bg-canvas"></div>
+<div class="grid-lines"></div>
+
+<!-- SVG SYMBOL DEFS -->
+<svg style="display:none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <symbol id="s-bolt" viewBox="0 0 24 24"><path d="M13 2L3 14h9l-1 8 10-12h-9z" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="s-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></symbol>
+    <symbol id="s-rocket" viewBox="0 0 24 24"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></symbol>
+    <symbol id="s-clip" viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><rect x="8" y="2" width="8" height="4" rx="1" stroke="currentColor" stroke-width="2" fill="none"/><line x1="9" y1="12" x2="15" y2="12" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><line x1="9" y1="16" x2="13" y2="16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="s-hand" viewBox="0 0 24 24"><path d="M20.42 4.58a5.4 5.4 0 0 0-7.65 0l-.77.78-.77-.78a5.4 5.4 0 0 0-7.65 0C1.46 6.7 1.33 10.28 4 13l8 8 8-8c2.67-2.72 2.54-6.3.42-8.42z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></symbol>
+    <symbol id="s-star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" stroke="currentColor" stroke-width="2" stroke-linejoin="round" fill="none"/></symbol>
+    <symbol id="s-wa" viewBox="0 0 24 24"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></symbol>
+    <symbol id="s-mail" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="2" fill="none"/><polyline points="22,6 12,13 2,6" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/></symbol>
+    <symbol id="s-user" viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" fill="none"/><circle cx="12" cy="7" r="4" stroke="currentColor" stroke-width="2" fill="none"/></symbol>
+    <symbol id="s-bld" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2" stroke="currentColor" stroke-width="2" fill="none"/><line x1="3" y1="9" x2="21" y2="9" stroke="currentColor" stroke-width="2"/><line x1="9" y1="21" x2="9" y2="9" stroke="currentColor" stroke-width="2"/></symbol>
+  </defs>
+</svg>
+
+<!-- NAV -->
+<nav id="nav">
+  <div class="nav-logo">
+    <svg viewBox="0 0 140 90" xmlns="http://www.w3.org/2000/svg">
+      <!-- left skyline -->
+      <rect x="6"  y="32" width="11" height="24" rx="1.5" fill="#1a3a7a"/>
+      <rect x="4"  y="40" width="8"  height="16" rx="1"   fill="#1a3a7a"/>
+      <rect x="17" y="22" width="14" height="34" rx="1.5" fill="#1a3a7a"/>
+      <!-- right skyline -->
+      <rect x="94" y="20" width="16" height="32" rx="1.5" fill="#1a3a7a"/>
+      <rect x="104" y="28" width="10" height="24" rx="1"  fill="#1a3a7a"/>
+      <rect x="112" y="36" width="7" height="16" rx="1"   fill="#1a3a7a"/>
+      <!-- windows -->
+      <rect x="96" y="24" width="4" height="4" rx="0.5" fill="#fff" opacity="0.7"/>
+      <rect x="103" y="24" width="4" height="4" rx="0.5" fill="#fff" opacity="0.7"/>
+      <rect x="96" y="31" width="4" height="4" rx="0.5" fill="#fff" opacity="0.7"/>
+      <rect x="103" y="31" width="4" height="4" rx="0.5" fill="#fff" opacity="0.7"/>
+      <!-- arcs -->
+      <path d="M4 54 Q35 14 70 44 Q105 14 136 54" fill="none" stroke="#1a3a7a" stroke-width="13" stroke-linecap="round"/>
+      <path d="M4 54 Q35 14 70 44 Q105 14 136 54" fill="none" stroke="#d0d8e8" stroke-width="7" stroke-linecap="round"/>
+      <path d="M70 44 Q105 14 136 54" fill="none" stroke="#4caf3f" stroke-width="10" stroke-linecap="round"/>
+    </svg>
+    <div class="nav-brand">A <em>GENTE</em></div>
+  </div>
+  <ul class="nav-links">
+    <li><a href="#inicio">Início</a></li>
+    <li><a href="#sobre">Quem Somos</a></li>
+    <li><a href="#como-funciona">Como Funciona</a></li>
+    <li><a href="#contato" class="nav-cta">Cadastre-se</a></li>
+  </ul>
+  <button class="hbg" id="hbg"><span></span><span></span><span></span></button>
+</nav>
+
+<!-- HERO -->
+<section id="inicio">
+  <div class="hero-badge"><span class="pdot"></span>Plataforma de Conexão de Talentos</div>
+  <h1>Conectando pessoas a <em>oportunidades reais</em></h1>
+  <p class="hero-sub">A Gente aproxima candidatos talentosos de empresas que valorizam pessoas de verdade. Rápido, simples e humano.</p>
+  <div class="hero-btns">
+    <a href="https://forms.gle/LINK_CANDIDATO_AQUI" target="_blank" class="btn btn-candidate">
+      <svg width="20" height="20" style="color:#fff;flex-shrink:0"><use href="#s-user"/></svg>
+      Sou Candidato
+    </a>
+    <a href="https://forms.gle/LINK_EMPRESA_AQUI" target="_blank" class="btn btn-company">
+      <svg width="20" height="20" style="color:#9ec4ff;flex-shrink:0"><use href="#s-bld"/></svg>
+      Sou Empresa
+    </a>
+  </div>
+  <div class="hero-stats">
+    <div class="stat"><span class="stat-n" data-target="500" data-suffix="+">0+</span><span class="stat-l">Candidatos</span></div>
+    <div class="stat"><span class="stat-n" data-target="80"  data-suffix="+">0+</span><span class="stat-l">Empresas parceiras</span></div>
+    <div class="stat"><span class="stat-n" data-target="97"  data-suffix="%">0%</span><span class="stat-l">Satisfação</span></div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SOBRE -->
+<section id="sobre">
+  <div>
+    <span class="stag reveal">Nossa missão</span>
+    <h2 class="stitle reveal d1">Uma ponte entre talento e oportunidade</h2>
+    <p class="sbody reveal d2">A Gente nasceu para simplificar a contratação de estagiários e jovens profissionais. Conectamos quem quer crescer com quem precisa de gente boa — sem burocracia, sem complicação.</p>
+    <br>
+    <p class="sbody reveal d3" style="font-size:0.93rem">Cuidamos do processo completo: triagem, seleção, documentação e acompanhamento. Você foca no que importa — nós cuidamos do resto.</p>
+  </div>
+  <div class="cards-grid">
+    <div class="fcard reveal">
+      <span class="fcard-ico"><svg width="38" height="38" style="color:#7ed471"><use href="#s-bolt"/></svg></span>
+      <div class="fcard-title">Agilidade</div>
+      <div class="fcard-desc">Processo seletivo otimizado, com respostas em dias, não em semanas.</div>
+      <span class="pill">Rápido</span>
+    </div>
+    <div class="fcard blue reveal d1">
+      <span class="fcard-ico"><svg width="38" height="38" style="color:#9ec4ff"><use href="#s-link"/></svg></span>
+      <div class="fcard-title">Conexão</div>
+      <div class="fcard-desc">Match inteligente entre perfil do candidato e cultura da empresa.</div>
+      <span class="pill">Preciso</span>
+    </div>
+    <div class="fcard wide gold reveal d2">
+      <span class="fcard-ico"><svg width="42" height="42" style="color:#f5c842"><use href="#s-rocket"/></svg></span>
+      <div class="fcard-title">Oportunidades que transformam</div>
+      <div class="fcard-desc">Mais do que um estágio — um ponto de partida para uma carreira de verdade. Trabalhamos com empresas que investem no desenvolvimento dos jovens talentos.</div>
+      <span class="pill">Impacto Real</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- COMO FUNCIONA -->
+<section id="como-funciona">
+  <span class="stag reveal" style="justify-content:center">Simples assim</span>
+  <h2 class="stitle reveal d1" style="max-width:460px;margin:0 auto 1rem">Como funciona</h2>
+  <p class="sbody reveal d2" style="margin:0 auto;text-align:center">Em poucos passos, você está conectado às melhores oportunidades — ou aos melhores talentos.</p>
+  <div class="steps">
+    <div class="step reveal">
+      <span class="step-num">01</span>
+      <span class="step-ico"><svg width="46" height="46" style="color:#7ed471"><use href="#s-clip"/></svg></span>
+      <div class="step-title">Cadastro rápido</div>
+      <div class="step-desc">Preencha o formulário em menos de 5 minutos. Candidato ou empresa — é simples para os dois lados.</div>
+      <div class="step-bar"></div>
+    </div>
+    <div class="step reveal d1">
+      <span class="step-num">02</span>
+      <span class="step-ico"><svg width="46" height="46" style="color:#9ec4ff"><use href="#s-hand"/></svg></span>
+      <div class="step-title">A gente faz o match</div>
+      <div class="step-desc">Analisamos seu perfil e conectamos você com quem realmente combina — sem filtros genéricos.</div>
+      <div class="step-bar"></div>
+    </div>
+    <div class="step reveal d2">
+      <span class="step-num">03</span>
+      <span class="step-ico"><svg width="46" height="46" style="color:#f5c842"><use href="#s-star"/></svg></span>
+      <div class="step-title">Começa a jornada</div>
+      <div class="step-desc">Contratação, documentação e onboarding — cuidamos de tudo. Você só precisa aparecer e arrasar.</div>
+      <div class="step-bar"></div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- CONTATO -->
+<section id="contato">
+  <div class="contato-wrap">
+    <span class="stag reveal" style="justify-content:center">Fale com a gente</span>
+    <h2 class="stitle reveal d1">Pronto para dar o próximo passo?</h2>
+    <p class="sbody reveal d2" style="margin:0 auto;text-align:center">Seja candidato ou empresa, estamos aqui para ajudar. Entre em contato pelo WhatsApp ou por e-mail — respondemos rápido.</p>
+    <div class="contato-btns reveal d3">
+      <a href="https://wa.me/5511999999999" target="_blank" class="btn btn-wa">
+        <svg width="20" height="20" style="color:#fff;flex-shrink:0"><use href="#s-wa"/></svg>
+        WhatsApp
+      </a>
+      <a href="mailto:contato@agente.com.br" class="btn btn-mail">
+        <svg width="20" height="20" style="color:rgba(255,255,255,0.65);flex-shrink:0"><use href="#s-mail"/></svg>
+        contato@agente.com.br
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">
+    <svg viewBox="0 0 140 90" xmlns="http://www.w3.org/2000/svg" style="height:32px">
+      <rect x="6"  y="32" width="11" height="24" rx="1.5" fill="#1a3a7a"/>
+      <rect x="4"  y="40" width="8"  height="16" rx="1"   fill="#1a3a7a"/>
+      <rect x="17" y="22" width="14" height="34" rx="1.5" fill="#1a3a7a"/>
+      <rect x="94" y="20" width="16" height="32" rx="1.5" fill="#1a3a7a"/>
+      <rect x="104" y="28" width="10" height="24" rx="1"  fill="#1a3a7a"/>
+      <rect x="112" y="36" width="7" height="16" rx="1"   fill="#1a3a7a"/>
+      <rect x="96" y="24" width="4" height="4" rx="0.5" fill="#fff" opacity="0.5"/>
+      <rect x="103" y="24" width="4" height="4" rx="0.5" fill="#fff" opacity="0.5"/>
+      <rect x="96" y="31" width="4" height="4" rx="0.5" fill="#fff" opacity="0.5"/>
+      <rect x="103" y="31" width="4" height="4" rx="0.5" fill="#fff" opacity="0.5"/>
+      <path d="M4 54 Q35 14 70 44 Q105 14 136 54" fill="none" stroke="#1a3a7a" stroke-width="13" stroke-linecap="round"/>
+      <path d="M4 54 Q35 14 70 44 Q105 14 136 54" fill="none" stroke="#d0d8e8" stroke-width="7" stroke-linecap="round"/>
+      <path d="M70 44 Q105 14 136 54" fill="none" stroke="#4caf3f" stroke-width="10" stroke-linecap="round"/>
+    </svg>
+    <div class="footer-name">A <em>GENTE</em> — Conecta Talentos</div>
+  </div>
+  <ul class="footer-links">
+    <li><a href="#inicio">Início</a></li>
+    <li><a href="#sobre">Sobre</a></li>
+    <li><a href="#contato">Contato</a></li>
+  </ul>
+  <div class="footer-copy">© 2025 A Gente</div>
+</footer>
+
+<script>
+// cursor
+const cg = document.getElementById('cglow');
+document.addEventListener('mousemove', e => { cg.style.left = e.clientX+'px'; cg.style.top = e.clientY+'px'; });
+
+// reveal
+const io = new IntersectionObserver(entries => entries.forEach(e => { if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);} }), {threshold:0.1});
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+// nav
+window.addEventListener('scroll', () => document.getElementById('nav').classList.toggle('scrolled', scrollY > 40));
+
+// hamburger
+document.getElementById('hbg').addEventListener('click', () => {
+  const ul = document.querySelector('.nav-links');
+  const open = ul.style.display === 'flex';
+  ul.style.cssText = open ? '' : 'display:flex;flex-direction:column;position:fixed;top:72px;left:0;right:0;background:rgba(10,18,42,0.98);padding:2rem;gap:1.5rem;z-index:99;backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,0.1)';
+  if(!open) ul.querySelectorAll('a').forEach(a => a.addEventListener('click', ()=>ul.style.cssText='', {once:true}));
+});
+
+// counters
+function count(el, t, s) {
+  const dur = 1900, start = performance.now();
+  (function tick(now) {
+    const p = Math.min((now-start)/dur, 1), e = 1-Math.pow(1-p,3);
+    el.textContent = Math.floor(e*t)+s;
+    if(p<1) requestAnimationFrame(tick);
+  })(performance.now());
+}
+const sio = new IntersectionObserver(([en]) => { if(en.isIntersecting){ document.querySelectorAll('.stat-n').forEach(el=>count(el,+el.dataset.target,el.dataset.suffix)); sio.disconnect(); } }, {threshold:0.5});
+const hs = document.querySelector('.hero-stats');
+if(hs) sio.observe(hs);
+</script>
+</body>
+</html>
